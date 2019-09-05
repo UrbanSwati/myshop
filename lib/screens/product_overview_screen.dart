@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_complete_guide/widgets/products_item.dart';
 import '../models/product.dart';
 
 class ProductsOverViewScreen extends StatelessWidget {
@@ -39,8 +41,24 @@ class ProductsOverViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('Product'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('MyShop'),
+      ),
+      body: GridView.builder(
+        padding: const EdgeInsets.all(10.0),
+        itemCount: loadedProducts.length,
+        itemBuilder: (BuildContext ctx, int index) {
+          Product product = loadedProducts[index];
+          return ProductItem(product.id, product.title, product.imageUrl);
+        },
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 3 / 2,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+        ),
+      ),
     );
   }
 }
