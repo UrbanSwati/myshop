@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:provider/provider.dart';
 import '../providers/products.dart';
-import '../providers/product.dart';
 import './products_item.dart';
 
 class ProductsGrid extends StatelessWidget {
@@ -15,8 +14,8 @@ class ProductsGrid extends StatelessWidget {
       padding: const EdgeInsets.all(10.0),
       itemCount: products.length,
       itemBuilder: (BuildContext ctx, int index) {
-        return ChangeNotifierProvider(
-          builder: (c) => products[index],
+        return ChangeNotifierProvider.value(
+          value: products[index],
           child: ProductItem(),
         );
       },
