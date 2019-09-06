@@ -37,7 +37,12 @@ class Products with ChangeNotifier {
     ),
   ];
 
+  bool _showFavoritOnly = false;
+
   List<Product> get items {
+    if(_showFavoritOnly) {
+      return _items.where((item) => item.isFavorite == true).toList();
+    }
     return [..._items];
   }
 
@@ -45,7 +50,18 @@ class Products with ChangeNotifier {
     return _items.firstWhere((product) => product.id == id);
   }
 
+  void showFavoritesOnly(){
+    _showFavoritOnly = true;
+    notifyListeners();
+  }
+
+  void showAll(){
+    _showFavoritOnly = false;
+    notifyListeners();
+  }
+
   void addProducts() {
     notifyListeners();
   }
+
 }
