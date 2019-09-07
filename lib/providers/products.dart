@@ -40,28 +40,31 @@ class Products with ChangeNotifier {
   bool _showFavoritOnly = false;
 
   List<Product> get items {
-    if(_showFavoritOnly) {
-      return _items.where((item) => item.isFavorite == true).toList();
-    }
+    // if(_showFavoritOnly) {
+    //   return _items.where((item) => item.isFavorite == true).toList();
+    // }
     return [..._items];
+  }
+
+  List<Product> get favoriteItems {
+    return _items.where((item) => item.isFavorite == true).toList();
   }
 
   Product findById(String id) {
     return _items.firstWhere((product) => product.id == id);
   }
 
-  void showFavoritesOnly(){
-    _showFavoritOnly = true;
-    notifyListeners();
-  }
+  // void showFavoritesOnly(){
+  //   _showFavoritOnly = true;
+  //   notifyListeners();
+  // }
 
-  void showAll(){
-    _showFavoritOnly = false;
-    notifyListeners();
-  }
+  // void showAll(){
+  //   _showFavoritOnly = false;
+  //   notifyListeners();
+  // }
 
   void addProducts() {
     notifyListeners();
   }
-
 }
