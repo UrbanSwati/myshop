@@ -25,13 +25,13 @@ class CardItem extends StatelessWidget {
                 actions: <Widget>[
                   FlatButton(
                     child: Text('No'),
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.of(context).pop(false);
                     },
                   ),
                   FlatButton(
                     child: Text('Yes'),
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.of(context).pop(true);
                     },
                   )
