@@ -111,6 +111,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_imageFocusNode);
                 },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter valid description';
+                  }
+                  if (value.length < 10) {
+                    return 'Should be at least 10 charters long';
+                  }
+                  return null;
+                },
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -137,15 +146,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       textInputAction: TextInputAction.done,
                       controller: _imageUrlController,
                       focusNode: _imageFocusNode,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter valid description';
-                        }
-                        if (value.length < 10) {
-                          return 'Should be at least 10 charters long';
-                        }
-                        return null;
-                      },
                       onFieldSubmitted: (_) {
                         _saveForm();
                       },
