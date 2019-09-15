@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../providers/product.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const String routeName = '/edit-product-screen';
@@ -11,6 +12,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _descriptionFocusNode = FocusNode();
   final _imageFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
+  final _form = GlobalKey<FormState>();
+  Product _editatedProduct = Product(
+    id: null,
+    price: 0,
+    title: '',
+    description: '',
+    imageUrl: '',
+  );
 
   @override
   void initState() {
@@ -28,10 +37,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.dispose();
   }
 
-  void _updateImageUrl(){
-    if(!_imageFocusNode.hasFocus){
+  void _updateImageUrl() {
+    if (!_imageFocusNode.hasFocus) {
       setState(() {});
     }
+  }
+
+  void _saveForm() {
+    final bool isValid = _form.currentState.validate();
+    if(!isValid){
+      return;
+    }
+    _form.currentState.save();
   }
 
   @override
@@ -39,23 +56,43 @@ class _EditProductScreenState extends State<EditProductScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Product'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.save),
+            onPressed: _saveForm,
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Form(
+          key: _form,
           child: ListView(
             children: <Widget>[
               TextFormField(
-                  decoration: InputDecoration(labelText: 'Title'),
-                  textInputAction: TextInputAction.next,
-                  onFieldSubmitted: (_) {
-                    FocusScope.of(context).requestFocus(_priceFocusNode);
-                  }),
+                decoration: InputDecoration(labelText: 'Title'),
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(_priceFocusNode);
+                },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter valid string';
+                  }
+                  return null;
+                },
+              ),
               TextFormField(
                   decoration: InputDecoration(labelText: 'Price'),
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
                   focusNode: _priceFocusNode,
+                  validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter valid price';
+                  }
+                  return null;
+                },
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_descriptionFocusNode);
                   }),
@@ -93,6 +130,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       textInputAction: TextInputAction.done,
                       controller: _imageUrlController,
                       focusNode: _imageFocusNode,
+                      onFieldSubmitted: (_) {
+                        _saveForm();
+                      },
                     ),
                   )
                 ],
