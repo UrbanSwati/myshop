@@ -146,6 +146,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       textInputAction: TextInputAction.done,
                       controller: _imageUrlController,
                       focusNode: _imageFocusNode,
+                      validator: (value) {
+                        if(value.isEmpty) {
+                          return 'Enter a URL';
+                        }
+                        if(!value.startsWith('http://') && value.startsWith('https://')){
+                          return 'Please enter valid url';
+                        }
+
+                        if(!value.endsWith('.png') && value.endsWith('.jpeg')){
+                          return 'Please enter valid image URL';
+                        }
+
+                        return null;
+                      },
                       onFieldSubmitted: (_) {
                         _saveForm();
                       },
