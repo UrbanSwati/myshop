@@ -45,7 +45,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void _saveForm() {
     final bool isValid = _form.currentState.validate();
-    if(!isValid){
+    if (!isValid) {
       return;
     }
     _form.currentState.save();
@@ -67,6 +67,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         padding: const EdgeInsets.all(15.0),
         child: Form(
           key: _form,
+          autovalidate: true,
           child: ListView(
             children: <Widget>[
               TextFormField(
@@ -77,7 +78,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Please enter valid string';
+                    return 'Please enter valid title';
                   }
                   return null;
                 },
@@ -88,11 +89,17 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   keyboardType: TextInputType.number,
                   focusNode: _priceFocusNode,
                   validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter valid price';
-                  }
-                  return null;
-                },
+                    if (value.isEmpty) {
+                      return 'Please enter valid price';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'Please enter a valid number.';
+                    }
+                    if (double.parse(value) <= 0) {
+                      return 'Please enter a price greater than 0';
+                    }
+                    return null;
+                  },
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_descriptionFocusNode);
                   }),
@@ -130,6 +137,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       textInputAction: TextInputAction.done,
                       controller: _imageUrlController,
                       focusNode: _imageFocusNode,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter valid description';
+                        }
+                        if (value.length < 10) {
+                          return 'Should be at least 10 charters long';
+                        }
+                        return null;
+                      },
                       onFieldSubmitted: (_) {
                         _saveForm();
                       },
