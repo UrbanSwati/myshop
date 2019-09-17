@@ -41,6 +41,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void _updateImageUrl() {
     if (!_imageFocusNode.hasFocus) {
+      var imageUrl = _imageUrlController.text;
+      if ((!imageUrl.startsWith('http://')) &&
+          (!imageUrl.startsWith('https://')) &&
+          (!imageUrl.endsWith('.png')) &&
+          (!imageUrl.endsWith('.jpeg')) &&
+          (!imageUrl.endsWith('.jpg'))) {
+        return;
+      }
       setState(() {});
     }
   }
@@ -188,7 +196,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         }
 
                         if (!value.endsWith('.png') &&
-                            value.endsWith('.jpeg')) {
+                            !value.endsWith('.jpeg') &&
+                            !value.endsWith('.jpg')) {
                           return 'Please enter valid image URL';
                         }
 
