@@ -67,11 +67,10 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) {
     final String baseUrl = environment['baseApiUrl'];
     final url = '$baseUrl/products.json';
-    print(url);
-    http.post(
+    return http.post(
       url,
       body: json.encode(
         {
