@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../models/http_exception.dart';
 import '../env.dart';
 import './product.dart';
 
@@ -131,7 +132,7 @@ class Products with ChangeNotifier {
 
   Future<void> updateProduct(String id, Product newProduct) async {
     final String baseUrl = environment['baseApiUrl'];
-    final url = '$baseUrl/products/$id,json';
+    final url = '$baseUrl/products/$id.json';
 
     await http.patch(
       url,
@@ -154,8 +155,23 @@ class Products with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String productId) {
-    _items.removeWhere((prod) => prod.id == productId);
+  Future<void> deleteProduct(String productId) async {
+    final String baseUrl = environment['baseApiUrl'];
+    final url = '$baseUrl/products/$productId.json';
+
+    final existingProductIndex =  _items.indexWhere((prod) => prod.id == productId);
+    var existingProduct = _items[existingProductIndex];
+
+    _items.removeAt(existingProductIndex);
     notifyListeners();
+
+    final response = await http.delete(url);
+
+    if (response.statusCode >= 400) {
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+      throw HttpException('Could not delete product');
+    }
+    existingProduct = null;
   }
 }
