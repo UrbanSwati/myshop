@@ -69,7 +69,7 @@ class Products with ChangeNotifier {
 
   Future<void> addProduct(Product product) {
     final String baseUrl = environment['baseApiUrl'];
-    final url = '$baseUrl/products.json';
+    final url = '$baseUrl/products';
     return http.post(
       url,
       body: json.encode(
@@ -92,6 +92,9 @@ class Products with ChangeNotifier {
       _items.add(newProduct);
 
       notifyListeners();
+    }).catchError((error) {
+      print(error);
+      throw error;
     });
   }
 
