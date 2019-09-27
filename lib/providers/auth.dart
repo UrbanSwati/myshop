@@ -14,7 +14,6 @@ class Auth with ChangeNotifier {
     final key = environment['authKey'];
     final url = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=$key";
 
-    print(url);
     final response = await http.post(
       url,
       body: json.encode(
@@ -22,6 +21,5 @@ class Auth with ChangeNotifier {
       ),
     );
 
-    print(json.decode(response.body));
   }
 }
