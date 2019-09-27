@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_complete_guide/providers/product.dart';
 import 'package:http/http.dart' as http;
 import '../env.dart';
 import './cart.dart';
@@ -24,6 +25,37 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
+  Future<void> fetchAndSetOrders() async {
+    final String baseUrl = environment['baseApiUrl'];
+    final url = '$baseUrl/orders.json';
+    final List<OrderItem> loadedOrders = [];
+
+    try {
+      final response = await http.get(url);
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      if (extractedData == null) return;
+      extractedData.forEach((orderId, orderData) {
+        loadedOrders.add(OrderItem(
+          amount: orderData['amount'],
+          dateTime: DateTime.parse(orderData['dateTime']),
+          id: orderId,
+          products: (orderData['products'] as List<dynamic>).map((p) {
+            return CartItem(
+                title: p['title'],
+                id: p['id'],
+                price: p['price'],
+                quantity: p['quantity']);
+          }).toList(),
+        ));
+      }); 
+
+      _orders = loadedOrders.reversed.toList();
+      notifyListeners();
+    } catch (error) {
+      print(error);
+    }
+  }
+
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     final String baseUrl = environment['baseApiUrl'];
     final url = '$baseUrl/orders.json';
@@ -34,15 +66,16 @@ class Orders with ChangeNotifier {
         body: json.encode(
           {
             'amount': total,
-            'products': 
-              cartProducts.map(
-                (cp) => {
-                  'id': cp.id,
-                  'title': cp.title,
-                  'price': cp.price,
-                  'quantity': cp.quantity,
-                },
-              ).toList(),
+            'products': cartProducts
+                .map(
+                  (cp) => {
+                    'id': cp.id,
+                    'title': cp.title,
+                    'price': cp.price,
+                    'quantity': cp.quantity,
+                  },
+                )
+                .toList(),
             'dateTime': timeStamp.toIso8601String()
           },
         ),
