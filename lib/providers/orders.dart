@@ -34,7 +34,7 @@ class Orders with ChangeNotifier {
         body: json.encode(
           {
             'amount': total,
-            'products': [
+            'products': 
               cartProducts.map(
                 (cp) => {
                   'id': cp.id,
@@ -42,8 +42,7 @@ class Orders with ChangeNotifier {
                   'price': cp.price,
                   'quantity': cp.quantity,
                 },
-              ).toList()
-            ],
+              ).toList(),
             'dateTime': timeStamp.toIso8601String()
           },
         ),
