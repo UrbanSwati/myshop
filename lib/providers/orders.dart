@@ -44,7 +44,7 @@ class Orders with ChangeNotifier {
                 title: p['title'],
                 id: p['id'],
                 price: p['price'],
-                quantity: p['quantity']);
+                quantity: p['quantity']); 
           }).toList(),
         ));
       }); 
