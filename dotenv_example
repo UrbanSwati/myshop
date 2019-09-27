@@ -1,1 +1,2 @@
 BASE_API_URL=https://your-api-example.com
+AUTH_KEY=your-firebase-auth-key
