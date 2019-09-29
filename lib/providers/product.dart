@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import '../models/http_exception.dart';
 
 import '../env.dart';
 
@@ -27,24 +26,26 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFavoriteStatus(String authToken) async {
+  Future<void> toggleFavoriteStatus(String authToken, String userId) async {
     final String baseUrl = environment['baseApiUrl'];
-    final url = '$baseUrl/products/$id.json?auth=$authToken';
+    final url = '$baseUrl/userFavorites/$userId/$id.json?auth=$authToken';
 
     final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
     try {
-      final response = await http.patch(
+      final response = await http.put(
         url,
-        body: json.encode({'isFavorite': isFavorite}),
+        body: json.encode(
+          isFavorite,
+        ),
       );
       if (response.statusCode >= 400) {
         // throw HttpException('Something wrong happened');
         print(response.body);
         _setFavValue(oldStatus);
       }
-    } catch (error) { 
+    } catch (error) {
       _setFavValue(oldStatus);
     }
   }
