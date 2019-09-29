@@ -20,6 +20,9 @@ class OrderItem {
 
 class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
+  final String authToken;
+
+  Orders(this.authToken, this._orders);
 
   List<OrderItem> get orders {
     return [..._orders];
@@ -27,7 +30,7 @@ class Orders with ChangeNotifier {
 
   Future<void> fetchAndSetOrders() async {
     final String baseUrl = environment['baseApiUrl'];
-    final url = '$baseUrl/orders.json';
+    final url = '$baseUrl/orders.json?auth=$authToken';
     final List<OrderItem> loadedOrders = [];
 
     try {
@@ -58,7 +61,7 @@ class Orders with ChangeNotifier {
 
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     final String baseUrl = environment['baseApiUrl'];
-    final url = '$baseUrl/orders.json';
+    final url = '$baseUrl/orders.json?auth=$authToken';
     final timeStamp = DateTime.now();
     try {
       final response = await http.post(
